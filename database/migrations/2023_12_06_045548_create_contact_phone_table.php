@@ -14,7 +14,13 @@ class CreateContactPhoneTable extends Migration
     public function up()
     {
         Schema::create('contact_phone', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
+            $table->integer('contact_id')
+                ->unsigned();
+            $table->integer('phone_id')
+                ->unsigned();
+            $table->timestamps();
+
             $table->foreign('contact_id')
                 ->references('id')
                 ->on('contacts')
@@ -23,7 +29,6 @@ class CreateContactPhoneTable extends Migration
                 ->references('id')
                 ->on('phones')
                 ->onDelete('cascade');
-            $table->timestamps();
         });
     }
 

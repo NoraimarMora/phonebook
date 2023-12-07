@@ -14,7 +14,13 @@ class CreateContactGroupTable extends Migration
     public function up()
     {
         Schema::create('contact_group', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
+            $table->integer('contact_id')
+                ->unsigned();
+            $table->integer('group_id')
+                ->unsigned();
+            $table->timestamps();
+
             $table->foreign('contact_id')
                 ->references('id')
                 ->on('contacts')
@@ -23,7 +29,6 @@ class CreateContactGroupTable extends Migration
                 ->references('id')
                 ->on('groups')
                 ->onDelete('cascade');
-            $table->timestamps();
         });
     }
 

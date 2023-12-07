@@ -14,7 +14,7 @@ class CreateContactsTable extends Migration
     public function up()
     {
         Schema::create('contacts', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->string('url_img');
             $table->string('first_name');
             $table->string('second_name');
@@ -26,18 +26,23 @@ class CreateContactsTable extends Migration
             $table->string('address');          // Linea 1 de la direccion
             $table->string('address_2');        // Linea 2 de la direccion
             $table->string('province');
-            $table->date('birth_date');
+            $table->date('birth_date')
+                ->nullable();
             $table->string('website');
             $table->string('company');
             $table->string('department');
             $table->string('position');         // Puesto de trabajo
-            $table->foreign('owner')            // Usuario que lo agrego
+            $table->integer('owner')            // Usuario que lo agrego
+                ->unsigned();
+            $table->boolean('deleted');
+            $table->timestamp('deleted_at')
+                ->nullable();
+            $table->timestamps();
+
+            $table->foreign('owner')            
                 ->references('id')
                 ->on('users')
-                ->onDelete('SET 0');           
-            $table->boolean('deleted');
-            $table->timestamps();
-            $table->timestamp('deleted_at');
+                ->onDelete('cascade');   
         });
     }
 

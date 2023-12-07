@@ -7,3 +7,7 @@ active
 @section('page_name')
 Inicio
 @endsection
+
+@section('content')
+
+@endsection

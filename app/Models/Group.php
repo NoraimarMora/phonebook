@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Group extends Model
 {
     use HasFactory;
+
+    protected $table = "groups";
+
+    protected $fillable = ['id', 'name', 'background_color', 'color'];
+
+    public function contacts()
+    {
+        return $this->belongsToMany('App\Contact');
+    }
 }

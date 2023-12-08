@@ -32,6 +32,8 @@ class CreateContactsTable extends Migration
             $table->string('company');
             $table->string('department');
             $table->string('position');         // Puesto de trabajo
+            $table->boolean('favorite')
+                ->default(false);
             $table->integer('owner')            // Usuario que lo agrego
                 ->unsigned();
             $table->boolean('deleted');

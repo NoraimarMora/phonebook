@@ -78,7 +78,15 @@
                                 <p>Papelera</p>
                             </a>
                         </li>
-                        
+                        <li>
+                            <a id="logout-btn" class="nav-link" href="">
+                                <i class="fa fa-sign-out-alt"></i>
+                                <p>Cerrar Sesion</p>
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                {{ csrf_field() }}
+                            </form>
+                        </li>
                     </ul>
                 </div>
             </div>

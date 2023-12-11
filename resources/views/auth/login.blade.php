@@ -25,16 +25,16 @@
         <script src="{{ asset('js/functions.js') }}" type="text/javascript"></script>
     </head>
     <body>
-        <div class="wrapper @if(session('login_error')) login-error @elseif(session('server_error')) server-error @endif">
-            <form action="" method="POST">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+        <div class="wrapper @if(session('login_error')) login-error @endif">
+            <form action="{{ action('Auth\AuthenticatedSessionController@login') }}" method="POST">
+                @csrf
 
                 <div class="logo">
                     <img src="{{ asset('img/phonebook_512x512.png') }}" alt="Phonebook">
                 </div>
                 <div class="container">
                     <div class="form-group">
-                        <input class="form-control" type="email" placeholder="Correo Electronico" name="email" id="email" value="{{ old('email') }}" required>
+                        <input class="form-control" type="text" placeholder="Usuario" name="username" id="username" value="{{ old('username') }}" required>
                     </div>
                     <div class="form-group">
                         <input class="form-control" type="password" placeholder="Contraseña" name="password" id="password" value="{{ old('password') }}" required>

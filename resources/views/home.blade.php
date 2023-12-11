@@ -9,7 +9,7 @@ Inicio
 @endsection
 
 @section('content')
-<div class="content">
+<div id="home" class="content">
     <div class="row">
         <div class="col-lg-4">
             <div class="card card-stats">

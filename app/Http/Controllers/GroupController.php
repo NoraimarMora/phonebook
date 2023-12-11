@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Group;
 
 class GroupController extends Controller
 {
@@ -14,13 +14,9 @@ class GroupController extends Controller
      */
     public function index()
     {
-        $groups = DB::table('groups')
-                    ->leftJoin('contact_group', 'groups.id', '=', 'contact_group.contact_id')
-                    ->select(DB::raw('groups.*, COUNT(contact_group.id) AS contacts'))
-                    ->groupBy('contact_group.group_id')
-                    ->paginate(15);
-
-        return view('groups', ['groups' => $groups]);
+        return view('groups/list', [
+            'groups' => Group::where('owner', Auth::user()->id)->paginate(15),
+        ]);
     }
 
     /**

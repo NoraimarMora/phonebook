@@ -43,39 +43,39 @@
                     </div>
                     <ul class="nav">
                         <li class="nav-item @yield('home_active')">
-                            <a class="nav-link" href="">
+                            <a class="nav-link" href="{{ action('HomeController@index') }}">
                                 <i class="fa fa-home"></i>
                                 <p>Inicio</p>
                             </a>
                         </li>
                         <li class="nav-item @yield('contacts_active')">
-                            <a class="nav-link" href="">
+                            <a class="nav-link" href="{{ action('ContactController@index') }}">
                                 <i class="fa fa-address-book"></i>
                                 <p>Contactos</p>
                             </a>
                         </li>
                         <li class="nav-item @yield('favorites_active')">
-                            <a class="nav-link" href="">
+                            <a class="nav-link" href="{{ action('ContactController@favorites') }}">
                                 <i class="fa fa-heart"></i>
                                 <p>Favoritos</p>
                             </a>
                         </li>
                         <li class="nav-item @yield('groups_active')">
-                            <a class="nav-link" href="">
+                            <a class="nav-link" href="{{ action('GroupController@index') }}">
                                 <i class="fa fa-tags"></i>
                                 <p>Etiquetas</p>
                             </a>
                         </li>
                         @if(Auth::user()->role == 'superadmin')
                             <li class="nav-item @yield('users_active')">
-                                <a class="nav-link" href="">
+                                <a class="nav-link" href="{{ action('UserController@index') }}">
                                     <i class="fa fa-user-friends"></i>
                                     <p>Usuarios</p>
                                 </a>
                             </li>
                         @endif
                         <li class="nav-item @yield('trash_active')">
-                            <a class="nav-link" href="">
+                            <a class="nav-link" href="{{ action('ContactController@trash') }}">
                                 <i class="fa fa-trash"></i>
                                 <p>Papelera</p>
                             </a>

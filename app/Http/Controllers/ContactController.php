@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Contact;
 
 class ContactController extends Controller
 {
@@ -13,7 +15,13 @@ class ContactController extends Controller
      */
     public function index()
     {
-
+        return view('contacts/list', [
+            'page_name'      => 'Contactos',
+            'section_active' => 'contacts_active',
+            'home'           => false,
+            'trash'          => false,
+            'contacts'       => Contact::where('owner', Auth::user()->id)->paginate(15), 
+        ]);
     }
 
     /**
@@ -84,6 +92,16 @@ class ContactController extends Controller
 
     public function trash()
     {
+        return view('contacts/trash', [
+            'trash'    => true,
+            'contacts' => Contact::where('owner', Auth::user()->id)
+                ->where('deleted', true)
+                ->paginate(15),
+        ]);
+    }
+
+    public function restore()
+    {
 
     }
 
@@ -92,8 +110,16 @@ class ContactController extends Controller
         
     }
 
-    public function favorite()
+    public function favorites()
     {
-
+        return view('contacts/list', [
+            'page_name'      => 'Favoritos',
+            'section_active' => 'favorites_active',
+            'home'           => false,
+            'trash'          => false,
+            'contacts'       => Contact::where('owner', Auth::user()->id)
+                ->where('favorite', true)
+                ->paginate(15), 
+        ]);
     }
 }

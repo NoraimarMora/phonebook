@@ -37,16 +37,16 @@ class Contact extends Model
 
     public function groups()
     {
-        return $this->belongsToMany('App\Group');
+        return $this->belongsToMany('App\Models\Group');
     }
 
     public function emails()
     {
-        return $this->belongsToMany('App\Email');
+        return $this->belongsToMany('App\Models\Email');
     }
 
     public function phones()
     {
-        return $this->belongsToMany('App\Phone');
+        return $this->belongsToMany('App\Models\Phone');
     }
 }

@@ -18,7 +18,14 @@ class CreateGroupsTable extends Migration
             $table->string('name');
             $table->string('background_color', 7);
             $table->string('color', 7);
+            $table->integer('owner')            // Usuario que lo agrego
+                ->unsigned();
             $table->timestamps();
+
+            $table->foreign('owner')            
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade'); 
         });
     }
 

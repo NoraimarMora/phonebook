@@ -23,12 +23,13 @@ Route::middleware('auth')->group(function () {
     Route::get('home', 'HomeController@index')->name('home');
     
     Route::resource('/contacts', 'ContactController');
-    Route::resource('/groups', 'ContactController');
-    Route::resource('/users', 'ContactController');
+    Route::resource('/groups', 'GroupController');
+    Route::resource('/users', 'UserController');
 
     // Additional routes
-    Route::get('/contacts/favorites', 'ContactController@favorite')->name('contacts.favorite');
-    Route::put('/contacts/{contact_id}/favorite', 'ContactController@markAsFavorite')->name('contacts.mark_as_favorite');
+    Route::get('/favorites', 'ContactController@favorites')->name('contacts.favorites');
+    Route::put('/contacts/{contact}/favorite', 'ContactController@markAsFavorite')->name('contacts.mark_as_favorite');
     Route::get('/trash', 'ContactController@trash')->name('trash');
+    Route::get('/restore', 'ContactController@restore')->name('restore');
     Route::post('/logout', 'Auth\AuthenticatedSessionController@logout')->name('logout');
 });

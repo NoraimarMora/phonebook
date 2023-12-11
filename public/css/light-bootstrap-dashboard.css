@@ -4765,232 +4765,69 @@ Copyright (c) 2015 Daniel Eden
     float: left;
 }
 
-.filter-section {
-    margin-bottom: 1.5rem;
+.empty {
+    margin-top: 5rem;
+    text-align: center;
 }
 
-#filter {
-    display: inline;
-    max-width: 81.35%;
-}
-
-.filter-div {
-    margin-bottom: .5rem;
-}
-
-#scale-table .scale-td {
-    width: 19rem;
-}
-
-#user-role-table .user-role-td {
-    width: 24rem;
-}
-
-.user-role-name {
-    width: 34rem !important;
-}
-
-.section-title-div {
-    margin-bottom: .5rem;
-}
-
-.section-title {
-    font-weight: 400;
-    margin: 5px 0px;
-    font-size: 20px;
-    color: #000000;
+.empty img {
+    margin-bottom: 1rem;
 }
 
 .logo img {
     width: 6rem;
 }
 
-.green-flag {
-    color: #4DAD4A !important;
+.card.card-stats {
+    border-radius: 1rem;
 }
 
-.yellow-flag {
-    color: #EB9E3E !important;
-}
-
-.red-flag {
-    color: #CE3C3E !important;
-}
-
-.activity-icon {
-    padding-bottom: 0 !important;
-    padding-top: .55rem !important;
-}
-
-.activity-log {
-    padding-right: 0.9375rem !important;
-    width: 100%;
-}
-
-.card-body.pie-chart {
-    height: 330px;
-}
-
-.client-list {
-    display: block !important;
-}
-
-.card-client-list {
-    height: 480px;
-    overflow: overlay;
-}
-
-.card-client-list-receiver {
-    height: 396.5px;
-}
-
-input[type=checkbox] {
-    margin-left: .5rem;
-}
-
-.edit {
-    color: #FFFFFF !important;
-}
-
-.card .card-header.shipping-type,
-.card .card-header.box-item {
-    padding: 10px 15px;
-    border-top: 1px solid rgba(0,0,0,.125)
-}
-
-.card .table tbody td.zone:last-child,
-.card .table thead th.zone:last-child {
-    /*padding-right: 15px;*/
-    padding-right: 0;
-    padding-left: 0;
-    display: block;
-}
-
-.card-header .fa-times {
-    cursor: pointer;
-}
-
-.zone .fa-times {
-    cursor: pointer;
-    vertical-align: -webkit-baseline-middle;
-}
-
-#add_maritime_option {
-    margin-bottom: .7rem;
-}
-
-.move-error .card-client-list {
-    display: none;
-}
-
-.maritime-options .option input,
-.terrestrial-options .option input {
-    padding: .5rem .25rem;
-}
-
-.user-detail,
-.client-detail,
-.move-detail,
-.shipping-detail {
-    margin-bottom: .5rem;
-}
-
-.user-detail i,
-.client-detail i,
-.move-detail i,
-.shipping-detail i,
-.card.box .card-header i {
-    color: #FF8400;
-}
-
-.user-detail:last-child,
-.client-detail:last-child,
-.move-detail:last-child,
-.shipping-detail:last-child {
-    margin-bottom: 1rem;
-}
-
-.card.box,
-.card.zone {
-    margin: 0 1rem 1rem 1rem;
-}
-
-.card.box .col-md-3 {
-    max-width: 24.2%;
-}
-
-.card.box .col-md-10 {
-    max-width: 81.5%;
-}
-
-.card.box .col-md-2 {
-    max-width: 15.2%;
-}
-
-.card.box .col-md-3:first-child,
-.card.box .content {
+.info-horizontal .icon-circle {
+    border-radius: 50%;
+    width: 110px;
+    height: 110px;
     margin-left: 1rem;
 }
 
-.card.box .col-md-3:last-child,
-.card.box .total {
-    margin-right: 1rem;
+.info-horizontal .icon.icon-circle i {
+    display: table;
+    margin: 0 auto;
+    line-height: 3.5;
+    font-size: 1.9em;
 }
 
-.card.zone .col-md-12 {
-    margin: 0 1rem;
-    max-width: 97%;
+.contacts .info-horizontal .icon.icon-circle i {
+    color: #547DBF;
 }
 
-.col-md-12.options {
-    margin: 0 !important;
+.contacts .icon.icon-primary.icon-circle {
+    box-shadow: 0 9px 30px -6px rgba(84, 125, 191, .5);
 }
 
-.card.zone tr {
-    border-top: 1px solid #e9ecef;
+.favorites .info-horizontal .icon.icon-circle {
+    color: #33A851;
 }
 
-.card.zone td {
-    border-top: none;
+.favorites .icon.icon-primary.icon-circle {
+    box-shadow: 0 9px 30px -6px rgba(58, 168, 81, .5);
 }
 
-.card.zone .shipping td {
-    width: 50%;
+.tags .info-horizontal .icon.icon-circle {
+    color: #EA4335;
 }
 
-.empty {
-    float: left;
+.tags .icon.icon-primary.icon-circle {
+    box-shadow: 0 9px 30px -6px rgba(234, 67, 53, .5);
 }
 
-.country-terms {
-    text-align: justify;
+.info-horizontal .value {
+    align-self: center;
 }
 
-#shipping-invoice,
-#move-invoice {
-    margin-bottom: 1rem;
+.info-horizontal h3 {
+    font-size: 2rem;
 }
 
-.show-boxes .fa-check {
-    cursor: pointer;
-}
-
-.border {
-    border-right: 1px solid #e9ecef;
-}
-
-.box input {
-    padding: .5rem .25rem;
-}
-
-.update-shipping .content {
-    width: 43%;
-}
-
-.update-shipping .total {
-    width: 10%;
-}
-
-.update-shipping .form-group {
-    margin-bottom: 0;
+.info-horizontal h6 {
+    font-size: 1rem;
 }

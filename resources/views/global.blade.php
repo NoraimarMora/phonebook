@@ -8,7 +8,7 @@
 
         <title>Phonebook</title>
 
-        <link rel="shortcut icon" href="{{ asset('phonebook_32x32.png') }}">
+        <link rel="shortcut icon" href="{{ asset('img/phonebook_32x32.png') }}">
 
         <!-- CSS Files -->
         <link href="{{ asset('css/light-bootstrap-dashboard.css') }}" rel="stylesheet" />
@@ -60,18 +60,20 @@
                                 <p>Favoritos</p>
                             </a>
                         </li>
-                        <li class="nav-item @yield('labels_active')">
+                        <li class="nav-item @yield('groups_active')">
                             <a class="nav-link" href="">
                                 <i class="fa fa-tags"></i>
                                 <p>Etiquetas</p>
                             </a>
                         </li>
-                        <li class="nav-item @yield('user_active')">
-                            <a class="nav-link" href="">
-                                <i class="fa fa-user-friends"></i>
-                                <p>Usuarios</p>
-                            </a>
-                        </li>
+                        @if(Auth::user()->role == 'superadmin')
+                            <li class="nav-item @yield('users_active')">
+                                <a class="nav-link" href="">
+                                    <i class="fa fa-user-friends"></i>
+                                    <p>Usuarios</p>
+                                </a>
+                            </li>
+                        @endif
                         <li class="nav-item @yield('trash_active')">
                             <a class="nav-link" href="">
                                 <i class="fa fa-trash"></i>

@@ -1,4 +1,3 @@
-@section('list')
 @if(count($contacts))
     <div class="card strpied-tabled-with-hover">
         <div class="card-body table-full-width table-responsive">
@@ -8,7 +7,9 @@
                     <th>Correo Electronico</th>
                     <th>Telefono</th>
                     <th style="text-align: center!important;">Etiquetas</th>
-                    <th class="text-center">Acciones</th>
+                    @if($home)
+                        <th class="text-center">Acciones</th>
+                    @endif
                 </thead>
                 <tbody>
                     @foreach($contacts as $contact)
@@ -49,7 +50,6 @@
 @else
     <div class="empty">
         <img src="{{ asset('img/emptylabelicon_1x.png') }}" />
-        <span>No se han encontrado registros</span>
+        <p>No se han encontrado registros</p>
     </div>
 @endif
-@endsection

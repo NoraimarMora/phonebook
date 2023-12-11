@@ -1,9 +1,9 @@
 @extends('global')
 
-@section('users_active')
+@section('favorites_active')
 active
 @endsection
 
 @section('page_name')
-Usuarios
+Favoritos
 @endsection

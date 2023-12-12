@@ -191,8 +191,8 @@ class ContactController extends Controller
             return redirect()->action('ContactController@index')->with('error', true);
         }
 
-        $contact->delete = true;
-        $contact->delete_at = DB::raw('CURRENT_TIMESTAMP');
+        $contact->deleted = true;
+        $contact->deleted_at = DB::raw('CURRENT_TIMESTAMP');
         $contact->save();
 
         return redirect()->action('ContactController@index')->with('success', 'restore');
@@ -216,8 +216,8 @@ class ContactController extends Controller
             return redirect()->action('ContactController@trash')->with('error', true);
         }
 
-        $contact->delete = false;
-        $contact->delete_at = null;
+        $contact->deleted = false;
+        $contact->deleted_at = null;
         $contact->save();
 
         return redirect()->action('ContactController@trash')->with('success', 'restore');

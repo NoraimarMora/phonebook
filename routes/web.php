@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'Auth\AuthenticatedSessionController@create');
+Route::get('/', 'Auth\AuthenticatedSessionController@create')->name('index');
 
 Route::middleware('guest')->group(function () {
     route::post('/login', 'Auth\AuthenticatedSessionController@login')->name('login');

@@ -19,12 +19,13 @@ class HomeController extends Controller
         return view('home', [
             'home'          => true,
             'stats'         => [
-                'contacts'  => Contact::where('owner', Auth::user()->id)->count(),
-                'favorites' => Contact::where('owner', Auth::user()->id)->where('favorite', true)->count(),
+                'contacts'  => Contact::where('owner', Auth::user()->id)->where('deleted', false)->count(),
+                'favorites' => Contact::where('owner', Auth::user()->id)->where('deleted', false)->where('favorite', true)->count(),
                 'groups'    => Group::where('owner', Auth::user()->id)->count(),
             ], 
             'last_contacts' => Contact::where('owner', Auth::user()->id)
-                ->orderBy('created_at', 'desc')
+                ->where('deleted', false)
+                ->orderBy('created_at', 'asc')
                 ->limit(5)
                 ->get(),
         ]);

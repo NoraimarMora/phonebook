@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\Contact;
 
 class ContactController extends Controller
@@ -20,7 +21,10 @@ class ContactController extends Controller
             'section_active' => 'contacts_active',
             'home'           => false,
             'trash'          => false,
-            'contacts'       => Contact::where('owner', Auth::user()->id)->paginate(15), 
+            'contacts'       => Contact::where('owner', Auth::user()->id)
+                ->orderBy('first_name', 'asc')
+                ->orderBy('first_lastname', 'asc')
+                ->paginate(15), 
         ]);
     }
 
@@ -42,7 +46,47 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $contact                  = new Contact;
+            $contact->first_name      = $request->first_name;
+            $contact->second_name     = $request->second_name;
+            $contact->first_lastname  = $request->first_lastname;
+            $contact->second_lastname = $request->second_lastname;
+            $contact->country         = $request->country;
+            $contact->city            = $request->city;
+            $contact->postal_code     = $request->postal_code;
+            $contact->address         = $request->address;
+            $contact->address_2       = $request->address_2;
+            $contact->province        = $request->province;
+            $contact->birth_date      = $request->birth_date;
+            $contact->website         = $request->website;
+            $contact->company         = $request->company;
+            $contact->department      = $request->department;
+            $contact->position        = $request->position;
+            $contact->created_at      = DB::raw('CURRENT_TIMESTAMP');
+            
+            // Update phones info
+            foreach($request->phones as $phone) {
+                $contact->phones()->save($contact, [
+                    'number' => $p->number,
+                    'label'  => $p->label,
+                ]);
+            }
+
+            // Update emails info
+            foreach($request->emails as $email) {
+                $contact->emails()->save($contact, [
+                    'email' => $p->email,
+                    'label'  => $p->label,
+                ]);
+            }
+
+            $contact->save();
+
+            return redirect()->action('ContactController@index')->with('success', true);
+        } catch(Exception $err) {
+            return redirect()->action('ContactController@create')->with('error', true)->withInput();
+        }
     }
 
     /**
@@ -53,7 +97,13 @@ class ContactController extends Controller
      */
     public function show($id)
     {
-        //
+        $contact = Contact::find($id);
+
+        if(is_null($contact)) {
+            return redirect()->action('ContactController@index')->with('error', true);
+        }
+
+        return view('contacts/detail', ['contact' => $contact]);
     }
 
     /**
@@ -64,7 +114,13 @@ class ContactController extends Controller
      */
     public function edit($id)
     {
-        //
+        $contact = Contact::find($id);
+
+        if(is_null($contact)) {
+            return redirect()->action('ContactController@index')->with('error', true);
+        }
+
+        return view('contacts/edit', ['contact' => $contact]);
     }
 
     /**
@@ -76,7 +132,49 @@ class ContactController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $contact = Contact::find($id);
+
+        if(is_null($contact)) {
+            return redirect()->action('ContactController@index')->with('error', true);
+        }
+
+        // Update contact info
+        $contact->first_name      = $request->first_name;
+        $contact->second_name     = $request->second_name;
+        $contact->first_lastname  = $request->first_lastname;
+        $contact->second_lastname = $request->second_lastname;
+        $contact->country         = $request->country;
+        $contact->city            = $request->city;
+        $contact->postal_code     = $request->postal_code;
+        $contact->address         = $request->address;
+        $contact->address_2       = $request->address_2;
+        $contact->province        = $request->province;
+        $contact->birth_date      = $request->birth_date;
+        $contact->website         = $request->website;
+        $contact->company         = $request->company;
+        $contact->department      = $request->department;
+        $contact->position        = $request->position;
+        $contact->updated_at      = DB::raw('CURRENT_TIMESTAMP');
+        
+        // Update phones info
+        foreach($request->phones as $phone) {
+            $contact->phones()->save($contact, [
+                'number' => $p->number,
+                'label'  => $p->label,
+            ]);
+        }
+
+        // Update emails info
+        foreach($request->emails as $email) {
+            $contact->emails()->save($contact, [
+                'email' => $p->email,
+                'label'  => $p->label,
+            ]);
+        }
+
+        $contact->save();
+
+        return redirect()->action('ContactController@index')->with('success', true);
     }
 
     /**
@@ -87,7 +185,17 @@ class ContactController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $contact = Contact::find($id);
+
+        if(is_null($contact)) {
+            return redirect()->action('ContactController@index')->with('error', true);
+        }
+
+        $contact->delete = true;
+        $contact->delete_at = DB::raw('CURRENT_TIMESTAMP');
+        $contact->save();
+
+        return redirect()->action('ContactController@index')->with('success', 'restore');
     }
 
     public function trash()
@@ -100,14 +208,37 @@ class ContactController extends Controller
         ]);
     }
 
-    public function restore()
+    public function restore($id)
     {
+        $contact = Contact::find($id);
 
+        if(is_null($contact)) {
+            return redirect()->action('ContactController@trash')->with('error', true);
+        }
+
+        $contact->delete = false;
+        $contact->delete_at = null;
+        $contact->save();
+
+        return redirect()->action('ContactController@trash')->with('success', 'restore');
     }
 
-    public function markAsFavorite()
+    public function markAsFavorite($id)
     {
+        $contact = Contact::find($id);
+
+        if(is_null($contact)) {
+            return redirect()->action('ContactController@index')->with('error', true);
+        }
+
+        if($contact->favorite) {
+            $contact->favorite = false;
+        } else {
+            $contact->favorite = true;
+        }
+        $contact->save();
         
+        return redirect()->action('ContactController@index')->with('success', 'favorite');
     }
 
     public function favorites()

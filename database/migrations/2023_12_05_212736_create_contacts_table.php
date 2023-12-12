@@ -15,28 +15,43 @@ class CreateContactsTable extends Migration
     {
         Schema::create('contacts', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('url_img');
+            $table->string('url_img')
+                ->default("");
             $table->string('first_name');
-            $table->string('second_name');
-            $table->string('first_lastname');
-            $table->string('second_lastname');
-            $table->string('country');
-            $table->string('city');
-            $table->string('postal_code');
-            $table->string('address');          // Linea 1 de la direccion
-            $table->string('address_2');        // Linea 2 de la direccion
-            $table->string('province');
+            $table->string('second_name')
+                ->default("");
+            $table->string('first_lastname')
+                ->default("");
+            $table->string('second_lastname')
+                ->default("");
+            $table->string('country')
+                ->default("");
+            $table->string('city')
+                ->default("");
+            $table->string('postal_code')
+                ->default("");
+            $table->string('address')           // Linea 1 de la direccion
+                ->default("");          
+            $table->string('address_2')         // Linea 2 de la direccion
+                ->default("");        
+            $table->string('province')
+                ->default("");
             $table->date('birth_date')
                 ->nullable();
-            $table->string('website');
-            $table->string('company');
-            $table->string('department');
-            $table->string('position');         // Puesto de trabajo
+            $table->string('website')
+                ->default("");
+            $table->string('company')
+                ->default("");
+            $table->string('department')
+                ->default("");
+            $table->string('position')          // Puesto de trabajo
+                ->default("");         
             $table->boolean('favorite')
                 ->default(false);
             $table->integer('owner')            // Usuario que lo agrego
                 ->unsigned();
-            $table->boolean('deleted');
+            $table->boolean('deleted')
+                ->default(false);
             $table->timestamp('deleted_at')
                 ->nullable();
             $table->timestamps();

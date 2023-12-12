@@ -37,7 +37,19 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $group                   = new Group;
+            $group->name             = $request->name;
+            $group->background_color = $request->background_color;
+            $group->color            = $request->color;
+            $group->created_at       = DB::raw('CURRENT_TIMESTAMP');
+
+            $group->save();
+
+            return redirect()->action('GroupController@index')->with('success', true);
+        } catch(Exception $err) {
+            return redirect()->action('GroupController@create')->with('error', true)->withInput();
+        }
     }
 
     /**
@@ -75,7 +87,21 @@ class GroupController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $group = Group::find($id);
+
+        if(is_null($group)) {
+            return redirect()->action('GroupController@index')->with('error', true);
+        }
+
+        // Update group info
+        $group->name             = $request->name;
+        $group->background_color = $request->background_color;
+        $group->color            = $request->color;
+        $group->updated_at       = DB::raw('CURRENT_TIMESTAMP');
+        
+        $group->save();
+
+        return redirect()->action('GroupController@index')->with('success', true);
     }
 
     /**
@@ -86,6 +112,13 @@ class GroupController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $group = Group::find($id);
+
+        if(is_null($group)) {
+            return redirect()->action('GroupController@index')->with('error-delete', true);
+        }
+
+        $group->delete();
+        return redirect()->action('GroupController@index')->with('success', 'delete');
     }
 }

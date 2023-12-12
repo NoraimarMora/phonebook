@@ -1,5 +1,5 @@
 @if(count($contacts) > 0)
-    <div class="card strpied-tabled-with-hover">
+    <div class="card strpied-tabled-with-hover @if(session('error')) error @endif">
         <div class="card-body table-full-width table-responsive">
             <table class="table table-hover table-striped">
                 <thead>
@@ -26,20 +26,22 @@
                                      {{ $contact->second_lastname }}
                                 @endif
                             </td>
-                            <td>@if(count($contact->emails) > 0) {{ $contact->emails[0] }} @endif</td>
-                            <td>@if(count($contact->phones) > 0) {{ $contact->phones[0] }} @endif</td>
+                            <td>@if(count($contact->emails) > 0) {{ $contact->emails[0]->email }} @endif</td>
+                            <td>@if(count($contact->phones) > 0) {{ $contact->phones[0]->number }} @endif</td>
                             <td class="text-center">
                                 <x-groups />
                             </td>
                             @if(!$home)
                                 <td class="actions">
-                                    <form id="{{ $contact->id }}_favorite" action="{{ action('ContactController@markAsFavorite', $contact->id) }}"></form>
+                                    <form id="{{ $contact->id }}_favorite" action="{{ action('ContactController@markAsFavorite', $contact->id) }}" method="POST">
+                                        @csrf
+                                    </form>
                                     <form id="{{ $contact->id }}_edit" action="{{ action('ContactController@edit', $contact->id) }}"></form>
                                     <form id="{{ $contact->id }}_delete" action="{{ action('ContactController@destroy', $contact->id) }}" method="POST">
                                         @method('DELETE')
                                         @csrf
                                     </form>
-                                    <button class="btn btn-info btn-icon btn-sm" type="submit" form="{{ $contact->id }}_favorite">
+                                    <button class="btn btn-info btn-icon btn-sm @if($contact->favorite) favorite-contact @endif" type="submit" form="{{ $contact->id }}_favorite">
                                         <i class="fa fa-heart"></i>
                                     </button>
                                     <button class="btn btn-warning btn-icon btn-sm edit" type="submit" form="{{ $contact->id }}_edit">
@@ -54,13 +56,13 @@
                     @endforeach
                 </tbody>
             </table>
-            @if(!$home)
-                <div class="pagination">
-                    {{ $contacts->links() }}
-                </div>
-            @endif
         </div>
     </div>
+    @if(!$home)
+        <div class="pagination">
+            {{ $contacts->links() }}
+        </div>
+    @endif
 @else
     <div class="empty">
         <img src="{{ asset('img/emptylabelicon_1x.png') }}" />

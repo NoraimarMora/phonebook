@@ -4854,3 +4854,73 @@ table .actions {
 #groups table th {
     width: 28.6%;
 }
+
+.color-block {
+    width: 60%;
+    height: 1.5rem;
+    border: solid 1px #2c2c2c;
+}
+
+.favorite-contact {
+    background-color: #FFF !important;
+    color: #17a2b8 !important;
+}
+
+.pagination nav a, 
+.pagination nav span[aria-hidden='true'],
+.pagination div span[aria-current='page'] span {
+    border: none !important;
+    border-radius: 30px!important;
+    transition: all .3s;
+    padding: 0.7rem 1rem !important;
+    margin: 0 3px;
+    min-width: 30px;
+    text-align: center;
+    line-height: 30px;
+    color: #2c2c2c;
+    cursor: pointer;
+    font-size: 14px;
+    text-transform: uppercase;
+    background: 0 0;
+    outline: none;
+    background-color: transparent !important;
+}
+
+.page-link {
+    position: relative;
+    display: block;
+}
+
+.pagination div span[aria-current='page'] span {
+    background-color: #FF9500 !important;
+    border-color: #FF9500 !important;
+    color: #fff !important;
+}
+
+.pagination .flex-1 {
+    display: none;
+}
+
+.pagination .hidden div p {
+    display: none;
+}
+
+.pagination nav span[aria-hidden='true'],
+.pagination nav a[rel='next'],
+.pagination nav a[rel='prev'] {
+    padding: 0.7rem 0.1rem !important;
+}
+
+.pagination nav span[aria-hidden='true'] svg,
+.pagination nav a[rel='next'] svg,
+.pagination nav a[rel='prev'] svg {
+    width: 2rem;
+    position: relative;
+    top: 2px;
+}
+
+.pagination nav span[aria-hidden='true'] svg path,
+.pagination nav a[rel='next'] svg path,
+.pagination nav a[rel='prev'] svg path {
+    translate: 1px 5px;
+}

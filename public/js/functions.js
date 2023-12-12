@@ -3,6 +3,14 @@ $(document).ready(function () {
         event.preventDefault(); 
         $('#logout-form').submit();
     });
+
+    if ($('.login-error').length) {
+        showNotification('danger', 'login');
+    }
+
+    if ($('.error').length) {
+        showNotification('danger');
+    }
 });
 
 function showNotification(type, action = null) {
@@ -12,26 +20,11 @@ function showNotification(type, action = null) {
     if (type == 'success') {
         icon = 'fa fa-check';
 
-        switch (action) {
-            case 'create':
-                message = 'Creacion exitosa!';
-                break;
-            case 'update':
-                message = 'Actualizacion exitosa!';
-                break;
-            case 'delete':
-                message = 'Eliminacion exitosa!';
-                break;
-            case 'restore':
-                message = 'Restauracion exitosa!';
-                break;
-        }
+        message = 'Operacion finalizada con éxito!';        
     } else if (type == 'danger') {
         icon = 'fa fa-times';
         if (action == 'login') {
             message = 'Usuario y/o Contraseña invalido';
-        } else if (action == 'username') {
-            message = 'Usuario ya existe!';
         } else {
             message = 'Ha ocurrido un error!';
         }

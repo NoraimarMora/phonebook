@@ -26,7 +26,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -37,7 +37,23 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $user             = new User;
+            $user->name       = $request->name;
+            $user->lastname   = $request->lastname;
+            $user->role       = $request->role;
+            $user->username   = strtolower($user->name)[0] . strtolower($user->lastname) . '.';
+            $user->password   = bcrypt('temp123');
+            $user->created_at = DB::raw('CURRENT_TIMESTAMP');
+            $user->save();
+    
+            $user->username .= $user->id;
+            $user->save();
+
+            return redirect()->action('UserController@index')->with('success', true);
+        } catch(Exception $err) {
+            return redirect()->action('UserController@create')->with('error', true)->withInput();
+        }
     }
 
     /**
@@ -71,7 +87,20 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::find($id);
+
+        if(is_null($user)) {
+            return redirect()->action('UserController@index')->with('error', true);
+        }
+
+        // Update user info
+        $user->role       = $request->role;
+        $user->password   = bcrypt($request->password);
+        $user->updated_at = DB::raw('CURRENT_TIMESTAMP');
+        
+        $user->save();
+
+        return redirect()->action('UserController@index')->with('success', true);
     }
 
     /**
@@ -82,6 +111,13 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+
+        if(is_null($user)) {
+            return redirect()->action('UserController@index')->with('error-delete', true);
+        }
+
+        $user->delete();
+        return redirect()->action('UserController@index')->with('success', 'delete');
     }
 }

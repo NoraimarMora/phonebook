@@ -1,1 +1,1 @@
-<div></div>
+<div class="color-block" style="background-color: {{ $color }}"></div>

@@ -39,7 +39,7 @@ Nuevo grupo/etiqueta
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-ge pull-right">
+                    <button type="submit" class="btn btn-ge pull-right save">
                         <i class="fa fa-save"></i> Guardar
                     </button>
                 </form>

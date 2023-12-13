@@ -4958,3 +4958,7 @@ table .actions {
     margin-left: 0.2rem;
     border-radius: 5px;
 }
+
+.save {
+    margin-bottom: 2rem;
+}

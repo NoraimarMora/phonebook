@@ -1,5 +1,5 @@
 @if(count($contacts) > 0)
-    <div class="card strpied-tabled-with-hover">
+    <div class="card strpied-tabled-with-hover @if(session('error')) error @endif(session('success')) @endif">
         <div class="card-body table-full-width table-responsive">
             <table class="table table-hover table-striped">
                 <thead>
@@ -28,10 +28,10 @@
                             <td>@if(count($contact->phones) > 0) {{ $contact->phones[0]->number }} @endif</td>
                             <td>{{ $contact->deleted_at }}</td>
                             <td class="actions">
-                                <form id="{{ $contact->id }}_restore" action="{{ action('ContactController@restore') }}" method="POST">
-                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                <form id="{{ $contact->id }}_restore" action="{{ action('ContactController@restore', $contact->id) }}" method="POST">
+                                    @csrf
                                 </form>
-                                <button class="btn btn-info btn-icon btn-sm " type="submit" form="{{ $contact->_id }}_restore">
+                                <button class="btn btn-info btn-icon btn-sm " type="submit" form="{{ $contact->id }}_restore">
                                     <i class="fa fa-undo"></i>
                                 </button>
                             </td>

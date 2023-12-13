@@ -15,8 +15,6 @@ class CreateContactsTable extends Migration
     {
         Schema::create('contacts', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('url_img')
-                ->default("");
             $table->string('first_name');
             $table->string('second_name')
                 ->default("");
@@ -30,10 +28,8 @@ class CreateContactsTable extends Migration
                 ->default("");
             $table->string('postal_code')
                 ->default("");
-            $table->string('address')           // Linea 1 de la direccion
+            $table->string('address')
                 ->default("");          
-            $table->string('address_2')         // Linea 2 de la direccion
-                ->default("");        
             $table->string('province')
                 ->default("");
             $table->date('birth_date')

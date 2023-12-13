@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 
 class UserController extends Controller
@@ -26,7 +27,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        
+        return view('users/create');
     }
 
     /**
@@ -38,13 +39,21 @@ class UserController extends Controller
     public function store(Request $request)
     {
         try {
+            $validator = Validator::make($request->all(), [
+                'name'     => 'required',
+                'lastname' => 'required',
+            ]);
+
+            if($validator->fails() || $request->password != $request->confirm_password) {
+                return redirect()->action('UserController@create')->with('error', true)->withInput();
+            }
+
             $user             = new User;
             $user->name       = $request->name;
             $user->lastname   = $request->lastname;
             $user->role       = $request->role;
             $user->username   = strtolower($user->name)[0] . strtolower($user->lastname) . '.';
-            $user->password   = bcrypt('temp123');
-            $user->created_at = DB::raw('CURRENT_TIMESTAMP');
+            $user->password   = bcrypt($request->password);
             $user->save();
     
             $user->username .= $user->id;
@@ -75,7 +84,15 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        try {
+            $user = User::findOrFail($id);
+
+            return view('users/edit', [
+                'user' => $user
+            ]);
+        } catch(Exception $e) {
+            return redirect()->action('UserController@index')->with('error', true);
+        }
     }
 
     /**
@@ -87,6 +104,16 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $validator = Validator::make($request->all(), [
+            'name'     => 'required',
+            'lastname' => 'required',
+        ]);
+
+        if($validator->fails() || ($request->filled('password') && $request->has('password') && $request->password != $request->confirm_password)) {
+            return redirect()->action('GroupController@edit', ['id' => $id])->with('error', true)->withInput();
+        }
+
+
         $user = User::find($id);
 
         if(is_null($user)) {

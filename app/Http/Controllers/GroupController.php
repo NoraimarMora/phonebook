@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Group;
 
 class GroupController extends Controller
@@ -38,11 +41,19 @@ class GroupController extends Controller
     public function store(Request $request)
     {
         try {
+            $validator = Validator::make($request->all(), [
+                'name' => 'required',
+            ]);
+
+            if($validator->fails()) {
+                return redirect()->action('GroupController@create')->with('error', true)->withInput();
+            }
+
             $group                   = new Group;
             $group->name             = $request->name;
             $group->background_color = $request->background_color;
             $group->color            = $request->color;
-            $group->created_at       = DB::raw('CURRENT_TIMESTAMP');
+            $group->owner            = Auth::user()->id;
 
             $group->save();
 
@@ -73,8 +84,12 @@ class GroupController extends Controller
     {
         try {
             $group = Group::findOrFail($id);
+
+            return view('groups/edit', [
+                'group' => $group
+            ]);
         } catch(Exception $e) {
-            return redirect()->action('GroupController@index')->withErrors(['Etiqueta no encontrada!']);
+            return redirect()->action('GroupController@index')->with('error', true);
         }
     }
 
@@ -87,17 +102,24 @@ class GroupController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+        ]);
+
+        if($validator->fails()) {
+            return redirect()->action('GroupController@edit', ['id' => $id])->with('error', true)->withInput();
+        }
+
         $group = Group::find($id);
 
         if(is_null($group)) {
-            return redirect()->action('GroupController@index')->with('error', true);
+            return redirect()->action('GroupController@edit', ['id' => $id])->with('error', true)->withInput();
         }
 
         // Update group info
         $group->name             = $request->name;
         $group->background_color = $request->background_color;
         $group->color            = $request->color;
-        $group->updated_at       = DB::raw('CURRENT_TIMESTAMP');
         
         $group->save();
 
@@ -119,6 +141,7 @@ class GroupController extends Controller
         }
 
         $group->delete();
+
         return redirect()->action('GroupController@index')->with('success', 'delete');
     }
 }

@@ -25,7 +25,7 @@ class HomeController extends Controller
             ], 
             'last_contacts' => Contact::where('owner', Auth::user()->id)
                 ->where('deleted', false)
-                ->orderBy('created_at', 'asc')
+                ->orderBy('created_at', 'desc')
                 ->limit(5)
                 ->get(),
         ]);

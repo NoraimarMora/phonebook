@@ -20,7 +20,7 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('home', 'HomeController@index')->name('home');
+    Route::get('/home', 'HomeController@index')->name('home');
     
     Route::resource('/contacts', 'ContactController');
     Route::resource('/groups', 'GroupController');
@@ -30,6 +30,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/favorites', 'ContactController@favorites')->name('contacts.favorites');
     Route::post('/contacts/{contact}/favorite', 'ContactController@markAsFavorite')->name('contacts.mark_as_favorite');
     Route::get('/trash', 'ContactController@trash')->name('trash');
-    Route::post('/restore', 'ContactController@restore')->name('restore');
+    Route::post('/restore/{contact}', 'ContactController@restore')->name('restore');
     Route::post('/logout', 'Auth\AuthenticatedSessionController@logout')->name('logout');
 });

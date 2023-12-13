@@ -106,7 +106,7 @@
                 </nav>
                 <!-- End Navbar -->
                 <div class="content">
-                    <div class="container-fluid">
+                    <div class="container-fluid @if(session('error')) error @elseif(session('success')) success @endif">
                         @yield('content')
                     </div>
                 </div>

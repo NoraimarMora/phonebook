@@ -4863,7 +4863,7 @@ table .actions {
 
 .favorite-contact {
     background-color: #FFF !important;
-    color: #17a2b8 !important;
+    color: #28a745 !important;
 }
 
 .pagination nav a, 
@@ -4923,4 +4923,38 @@ table .actions {
 .pagination nav a[rel='next'] svg path,
 .pagination nav a[rel='prev'] svg path {
     translate: 1px 5px;
+}
+
+.filter-section {
+    margin-bottom: 1.5rem;
+}
+
+.select-groups {
+    height: 3.5rem;
+}
+
+.email .close i,
+.phone .close i {
+    padding-top: 0.5rem;
+}
+
+.contact-detail {
+    margin-bottom: .5rem;
+}
+
+.contact-detail i {
+    color: #FF8400;
+}
+
+.contact-detail:last-child {
+    margin-bottom: 1rem;
+}
+
+.contact-detail .groups,
+#contacts .groups,
+#favorites .groups,
+#home .groups {
+    padding: 0.2rem;
+    margin-left: 0.2rem;
+    border-radius: 5px;
 }

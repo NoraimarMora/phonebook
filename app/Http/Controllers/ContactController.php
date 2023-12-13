@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Contact;
+use App\Models\Email;
+use App\Models\Group;
+use App\Models\Phone;
 
 class ContactController extends Controller
 {
@@ -22,6 +26,7 @@ class ContactController extends Controller
             'home'           => false,
             'trash'          => false,
             'contacts'       => Contact::where('owner', Auth::user()->id)
+                ->where('deleted', false)
                 ->orderBy('first_name', 'asc')
                 ->orderBy('first_lastname', 'asc')
                 ->paginate(15), 
@@ -35,7 +40,9 @@ class ContactController extends Controller
      */
     public function create()
     {
-        //
+        return view('contacts/create', [
+            'groups' => Group::where('owner', Auth::user()->id)->get(),
+        ]);
     }
 
     /**
@@ -47,41 +54,60 @@ class ContactController extends Controller
     public function store(Request $request)
     {
         try {
+            $validator = Validator::make($request->all(), [
+                'first_name' => 'required',
+            ]);
+
+            if($validator->fails()) {
+                return redirect()->action('ContactController@create')->with('error', true)->withInput();
+            }
+
             $contact                  = new Contact;
             $contact->first_name      = $request->first_name;
-            $contact->second_name     = $request->second_name;
-            $contact->first_lastname  = $request->first_lastname;
-            $contact->second_lastname = $request->second_lastname;
-            $contact->country         = $request->country;
-            $contact->city            = $request->city;
-            $contact->postal_code     = $request->postal_code;
-            $contact->address         = $request->address;
-            $contact->address_2       = $request->address_2;
-            $contact->province        = $request->province;
+            $contact->second_name     = $request->second_name != null ? $request->second_name : "";
+            $contact->first_lastname  = $request->first_lastname != null ? $request->first_lastname : "";
+            $contact->second_lastname = $request->second_lastname != null ? $request->second_lastname : "";
+            $contact->country         = $request->country != null ? $request->country : "";
+            $contact->city            = $request->city != null ? $request->city : "";
+            $contact->postal_code     = $request->postal_code != null ? $request->postal_code : "";
+            $contact->address         = $request->address != null ? $request->address : "";
+            $contact->province        = $request->province != null ? $request->provice : "";
             $contact->birth_date      = $request->birth_date;
-            $contact->website         = $request->website;
-            $contact->company         = $request->company;
-            $contact->department      = $request->department;
-            $contact->position        = $request->position;
-            $contact->created_at      = DB::raw('CURRENT_TIMESTAMP');
+            $contact->website         = $request->website != null ? $request->website : "";
+            $contact->company         = $request->company != null ? $request->company : "";
+            $contact->department      = $request->department != null ? $request->department : "";
+            $contact->position        = $request->position != null ? $request->position : "";
+            $contact->owner           = Auth::user()->id;
             
-            // Update phones info
-            foreach($request->phones as $phone) {
+            for($i = 0; $i < count($request->phone_number); $i++) {
+                $phone         = new Phone;
+                $phone->number = $request->phone_number[$i] != null ? $request->phone_number[$i] : "";
+                $phone->label  = $request->phone_label[$i] != null ? $request->phone_label[$i] : "";
+                $phone->save();
+
                 $contact->phones()->save($contact, [
-                    'number' => $p->number,
-                    'label'  => $p->label,
+                    'phone_id' => $phone->id,
                 ]);
             }
 
-            // Update emails info
-            foreach($request->emails as $email) {
+            for($i = 0; $i < count($request->email_email); $i++) {
+                $email        = new Email; 
+                $email->email = $request->email_email[$i] != null ? $request->email_email[$i] : "";
+                $email->label = $request->email_label[$i] != null ? $request->email_label[$i] : "";
+                $email->save();
+
                 $contact->emails()->save($contact, [
-                    'email' => $p->email,
-                    'label'  => $p->label,
+                    'email_id' => $email->id,
                 ]);
             }
 
             $contact->save();
+
+            foreach ($request->groups as $group) {
+                $contact->groups()->save($contact, [
+                    'group_id' => $group,
+                ]);
+            }
 
             return redirect()->action('ContactController@index')->with('success', true);
         } catch(Exception $err) {
@@ -103,7 +129,45 @@ class ContactController extends Controller
             return redirect()->action('ContactController@index')->with('error', true);
         }
 
-        return view('contacts/detail', ['contact' => $contact]);
+        $address = "";
+        if($contact->country != "" || $contact->address != "" || $contact->province != "" || $contact->city != "") {
+            if($contact->address != "") {
+                $address .= $contact->address . " · ";
+            }
+
+            if($contact->city != "") {
+                $address .= $contact->city . " · ";
+            }
+
+            if($contact->province != "") {
+                $address .= $contact->province . " · ";
+            }
+
+            if($contact->country != "") {
+                $address .= $contact->country;
+            }
+        }
+
+        $job = "";
+        if($contact->company != "" || $contact->position != "" || $contact->department != "") {
+            if($contact->position != "") {
+                $job .= $contact->position . " · ";
+            }
+
+            if($contact->department != "") {
+                $job .= $contact->department . " · ";
+            }
+
+            if($contact->company != "") {
+                $job .= $contact->company;
+            }
+        }
+
+        return view('contacts/detail', [
+            'contact' => $contact,
+            'address' => trim($address, ' · '),
+            'job' => trim($job, ' · '),
+        ]);
     }
 
     /**
@@ -132,6 +196,14 @@ class ContactController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required',
+        ]);
+
+        if($validator->fails()) {
+            return redirect()->action('ContactController@edit', ['id' => $id])->with('error', true)->withInput();
+        }
+
         $contact = Contact::find($id);
 
         if(is_null($contact)) {
@@ -140,39 +212,104 @@ class ContactController extends Controller
 
         // Update contact info
         $contact->first_name      = $request->first_name;
-        $contact->second_name     = $request->second_name;
-        $contact->first_lastname  = $request->first_lastname;
-        $contact->second_lastname = $request->second_lastname;
-        $contact->country         = $request->country;
-        $contact->city            = $request->city;
-        $contact->postal_code     = $request->postal_code;
-        $contact->address         = $request->address;
-        $contact->address_2       = $request->address_2;
-        $contact->province        = $request->province;
+        $contact->second_name     = $request->second_name != null ? $request->second_name : "";
+        $contact->first_lastname  = $request->first_lastname != null ? $request->first_lastname : "";
+        $contact->second_lastname = $request->second_lastname != null ? $request->second_lastname : "";
+        $contact->country         = $request->country != null ? $request->country : "";
+        $contact->city            = $request->city != null ? $request->city : "";
+        $contact->postal_code     = $request->postal_code != null ? $request->postal_code : "";
+        $contact->address         = $request->address != null ? $request->address : "";
+        $contact->province        = $request->province != null ? $request->provice : "";
         $contact->birth_date      = $request->birth_date;
-        $contact->website         = $request->website;
-        $contact->company         = $request->company;
-        $contact->department      = $request->department;
-        $contact->position        = $request->position;
-        $contact->updated_at      = DB::raw('CURRENT_TIMESTAMP');
+        $contact->website         = $request->website != null ? $request->website : "";
+        $contact->company         = $request->company != null ? $request->company : "";
+        $contact->department      = $request->department != null ? $request->department : "";
+        $contact->position        = $request->position != null ? $request->position : "";
+        
+        // Delete phones
+        foreach($contact->phones() as $phone) {
+            $finded = false;
+            foreach($request->phone_id as $phone_r) {
+                if ($phone->id == $phone_r) {
+                    $finded = true;
+                    break;
+                }
+            }
+            
+            if(!$finded) {
+                $phone->delete();
+            }
+        }
         
         // Update phones info
-        foreach($request->phones as $phone) {
-            $contact->phones()->save($contact, [
-                'number' => $p->number,
-                'label'  => $p->label,
-            ]);
+        for($i = 0; $i < count($request->phone_number); $i++) {
+            $p = Phone::find($request->phone_id);
+
+            if(is_null($p)) {
+                $phone         = new Phone;
+                $phone->number = $request->phone_number[$i] != null ? $request->phone_number[$i] : "";
+                $phone->label  = $request->phone_label[$i] != null ? $request->phone_label[$i] : "";
+                $phone->save();
+    
+                $contact->phones()->save($contact, [
+                    'phone_id' => $phone->id,
+                ]);
+
+                continue;
+            }
+
+            $p->number = $request->phone_number[$i] != null ? $request->phone_number[$i] : "";
+            $p->label  = $request->phone_label[$i] != null ? $request->phone_label[$i] : "";
+            $p->save();
+
+        }
+
+        // Delete emails
+        foreach($contact->emails() as $email) {
+            $finded = false;
+            foreach($request->email_id as $email_r) {
+                if ($email->id == $email_r) {
+                    $finded = true;
+                    break;
+                }
+            }
+            
+            if(!$finded) {
+                $email->delete();
+            }
         }
 
         // Update emails info
-        foreach($request->emails as $email) {
-            $contact->emails()->save($contact, [
-                'email' => $p->email,
-                'label'  => $p->label,
-            ]);
+        for($i = 0; $i < count($request->email_email); $i++) {
+            $e = Email::find($request->email_id);
+
+            if(is_null($e)) {
+                $email        = new Email; 
+                $email->email = $request->email_email[$i] != null ? $request->email_email[$i] : "";
+                $email->label = $request->email_label[$i] != null ? $request->email_label[$i] : "";
+                $email->save();
+    
+                $contact->emails()->save($contact, [
+                    'email_id' => $email->id,
+                ]);
+
+                continue;
+            }
+
+            $e->email = $request->email_email[$i] != null ? $request->email_email[$i] : "";
+            $e->label = $request->email_label[$i] != null ? $request->email_label[$i] : "";
+            $e->save();
         }
 
         $contact->save();
+
+        DB::table('contact_group')->where('contact_id', '=', $contact->id)->delete();
+
+        foreach ($request->groups as $group) {
+            $contact->groups()->save($contact, [
+                'group_id' => $group,
+            ]);
+        }
 
         return redirect()->action('ContactController@index')->with('success', true);
     }
@@ -195,7 +332,7 @@ class ContactController extends Controller
         $contact->deleted_at = DB::raw('CURRENT_TIMESTAMP');
         $contact->save();
 
-        return redirect()->action('ContactController@index')->with('success', 'restore');
+        return redirect()->action('ContactController@index')->with('success', true);
     }
 
     public function trash()
@@ -220,7 +357,7 @@ class ContactController extends Controller
         $contact->deleted_at = null;
         $contact->save();
 
-        return redirect()->action('ContactController@trash')->with('success', 'restore');
+        return redirect()->action('ContactController@trash')->with('success', true);
     }
 
     public function markAsFavorite($id)
@@ -238,7 +375,7 @@ class ContactController extends Controller
         }
         $contact->save();
         
-        return redirect()->action('ContactController@index')->with('success', 'favorite');
+        return redirect()->action('ContactController@index')->with('success', true);
     }
 
     public function favorites()

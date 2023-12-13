@@ -1,5 +1,5 @@
 @if(count($contacts) > 0)
-    <div class="card strpied-tabled-with-hover @if(session('error')) error @endif">
+    <div class="card strpied-tabled-with-hover">
         <div class="card-body table-full-width table-responsive">
             <table class="table table-hover table-striped">
                 <thead>
@@ -28,24 +28,24 @@
                             </td>
                             <td>@if(count($contact->emails) > 0) {{ $contact->emails[0]->email }} @endif</td>
                             <td>@if(count($contact->phones) > 0) {{ $contact->phones[0]->number }} @endif</td>
-                            <td class="text-center">
-                                <x-groups />
+                            <td>
+                                <x-groups :groups="$contact->groups" />
                             </td>
                             @if(!$home)
                                 <td class="actions">
                                     <form id="{{ $contact->id }}_favorite" action="{{ action('ContactController@markAsFavorite', $contact->id) }}" method="POST">
                                         @csrf
                                     </form>
-                                    <form id="{{ $contact->id }}_edit" action="{{ action('ContactController@edit', $contact->id) }}"></form>
+                                    <form id="{{ $contact->id }}_show" action="{{ action('ContactController@show', $contact->id) }}"></form>
                                     <form id="{{ $contact->id }}_delete" action="{{ action('ContactController@destroy', $contact->id) }}" method="POST">
                                         @method('DELETE')
                                         @csrf
                                     </form>
-                                    <button class="btn btn-info btn-icon btn-sm @if($contact->favorite) favorite-contact @endif" type="submit" form="{{ $contact->id }}_favorite">
+                                    <button class="btn btn-success btn-icon btn-sm @if($contact->favorite) favorite-contact @endif" type="submit" form="{{ $contact->id }}_favorite">
                                         <i class="fa fa-heart"></i>
                                     </button>
-                                    <button class="btn btn-warning btn-icon btn-sm edit" type="submit" form="{{ $contact->id }}_edit">
-                                        <i class="fa fa-edit"></i>
+                                    <button class="btn btn-primary btn-icon btn-sm" type="submit" form="{{ $contact->id }}_show">
+                                        <i class="fa fa-eye"></i>
                                     </button>
                                     <button class="btn btn-danger btn-icon btn-sm " type="submit" form="{{ $contact->id }}_delete">
                                         <i class="fa fa-trash"></i>
